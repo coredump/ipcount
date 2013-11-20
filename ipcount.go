@@ -77,11 +77,12 @@ func main() {
 					log.Fatalf("Failed to create multiclient: %v", err)
 				}
 			}
+			ip := matches[1]
 			_, err := multi.Exec(func() {
-				multi.ZIncrBy("ipcount_5m", 1, matches[1])
-				multi.ZIncrBy("ipcount_1h", 1, matches[1])
-				multi.ZIncrBy("ipcount_12h", 1, matches[1])
-				multi.ZIncrBy("ipcount_24h", 1, matches[1])
+				multi.ZIncrBy("ipcount_5m", 1, ip)
+				multi.ZIncrBy("ipcount_1h", 1, ip)
+				multi.ZIncrBy("ipcount_12h", 1, ip)
+				multi.ZIncrBy("ipcount_24h", 1, ip)
 			})
 			if err == redis.Nil {
 				log.Warning("Failed to add to set: %v", err)
