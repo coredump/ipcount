@@ -8,6 +8,7 @@ import (
 	"github.com/vmihailenco/redis"
 	"os"
 	"regexp"
+	"time"
 )
 
 var (
@@ -80,9 +81,13 @@ func main() {
 			ip := matches[1]
 			_, err := multi.Exec(func() {
 				multi.ZIncrBy("ipcount_5m", 1, ip)
+				multi.HSet("ipcount_h5m", ip, fmt.Sprintf("%d", time.Now().Unix()))
 				multi.ZIncrBy("ipcount_1h", 1, ip)
+				multi.HSet("ipcount_h1h", ip, fmt.Sprintf("%d", time.Now().Unix()))
 				multi.ZIncrBy("ipcount_12h", 1, ip)
+				multi.HSet("ipcount_h12h", ip, fmt.Sprintf("%d", time.Now().Unix()))
 				multi.ZIncrBy("ipcount_24h", 1, ip)
+				multi.HSet("ipcount_h24h", ip, fmt.Sprintf("%d", time.Now().Unix()))
 			})
 			if err == redis.Nil {
 				log.Warning("Failed to add to set: %v", err)
