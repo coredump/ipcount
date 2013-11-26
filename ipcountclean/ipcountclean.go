@@ -46,6 +46,8 @@ func main() {
 	twelve := now - int64((time.Duration(12) * time.Hour).Seconds())
 	twentyF := now - int64((time.Duration(24) * time.Hour).Seconds())
 
+	log.Debug("%d\n%d\n%d\n%d\n%d\n", now, five, oneH, twelve, twentyF)
+
 	ipHashFive := client.HGetAllMap("ipcount_h5m")
 	if ipHashFive.Err() != nil {
 		log.Warning("Failed to get 5m hashes %v", ipHashFive.Err())
