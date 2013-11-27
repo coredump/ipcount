@@ -5,7 +5,13 @@ function fnGetSelected(oTableLocal) {
 $(document).ready(function() {
 
   $('#scores5m').on('click', 'td', function(e) {
-    console.log(this)
+    var ip = $(this).html()
+    $.ajax({
+      url: "/whois/" + ip,
+      success: function(result) {
+        console.log(result.d)
+      }
+    })
     e.preventDefault();
   });
 

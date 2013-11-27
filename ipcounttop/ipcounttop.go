@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"github.com/op/go-logging"
@@ -8,6 +9,7 @@ import (
 	"github.com/stretchr/goweb/context"
 	"github.com/vmihailenco/redis"
 	"net/http"
+	"os/exec"
 	"strconv"
 	"time"
 )
@@ -17,6 +19,7 @@ var (
 	redisPasswd string
 	redisDB     int64
 	sharePath   string
+	serverPort  string
 	redisConn   *redis.Client
 	log         = logging.MustGetLogger("ipcounttop")
 	keyMap      = map[int]string{
@@ -32,6 +35,7 @@ func init() {
 	flag.StringVar(&redisPasswd, "p", "", "Redis password")
 	flag.Int64Var(&redisDB, "d", -1, "Redis DB number to store the data")
 	flag.StringVar(&sharePath, "s", "./src/github.com/coredump/ipcount/ipcounttop/webapp", "Path to webapp files dir")
+	flag.StringVar(&serverPort, "l", ":8888", "Port to use for webserver :<port number> format")
 }
 
 type TopController struct{}
@@ -82,6 +86,18 @@ func (t *TopController) Read(id string, ctx context.Context) (err error) {
 	return goweb.API.RespondWithData(ctx, ret)
 }
 
+func getWhois(c context.Context) error {
+	ip := c.PathParams().Get("ip").Str()
+	cmd := exec.Command("/usr/bin/whois", ip)
+	log.Debug("%v", cmd)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	if err := cmd.Run(); err != nil {
+		return goweb.API.RespondWithError(c, 500, err.Error())
+	}
+	return goweb.API.RespondWithData(c, out.String())
+}
+
 func redisConnect(addr, password string, db int64) (client *redis.Client, err error) {
 	client = redis.NewTCPClient(addr, password, db)
 	err = client.Ping().Err()
@@ -94,6 +110,7 @@ func main() {
 	topController := new(TopController)
 	goweb.MapController(topController)
 	goweb.MapStatic("/a", sharePath)
+	goweb.Map("/whois/{ip}", getWhois)
 
 	goweb.MapAfter(func(c context.Context) error {
 		log.Info("%s %s", c.HttpRequest().RemoteAddr, c.HttpRequest().RequestURI)
@@ -109,7 +126,7 @@ func main() {
 	})
 
 	s := &http.Server{
-		Addr:           ":8888",
+		Addr:           serverPort,
 		Handler:        goweb.DefaultHttpHandler(),
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
