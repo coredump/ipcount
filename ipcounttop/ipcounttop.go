@@ -108,9 +108,9 @@ func main() {
 	flag.Parse()
 
 	topController := new(TopController)
-	goweb.MapController(topController)
-	goweb.MapStatic("/a", sharePath)
-	goweb.Map("/whois/{ip}", getWhois)
+	goweb.MapController("/ipcount/top/", topController)
+	goweb.MapStatic("/ipcount/a", sharePath)
+	goweb.Map("/ipcount/whois/{ip}", getWhois)
 
 	goweb.MapAfter(func(c context.Context) error {
 		log.Info("%s %s", c.HttpRequest().RemoteAddr, c.HttpRequest().RequestURI)
@@ -118,7 +118,7 @@ func main() {
 	})
 
 	goweb.Map("/", func(c context.Context) error {
-		return goweb.Respond.WithPermanentRedirect(c, "/a/")
+		return goweb.Respond.WithPermanentRedirect(c, "/ipcount/a/")
 	})
 
 	goweb.Map(func(c context.Context) error {
