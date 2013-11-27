@@ -7,7 +7,7 @@ $(document).ready(function() {
   $('#scores5m').on('click', 'td', function(e) {
     var ip = $(this).html()
     $.ajax({
-      url: "/whois/" + ip,
+      url: "/ipcount/whois/" + ip,
       success: function(result) {
         console.log(result.d)
       }
@@ -17,7 +17,7 @@ $(document).ready(function() {
 
   var scoresFive = $('#scores5m').dataTable({
     "bProcessing": true,
-    "sAjaxSource": '/top/1',
+    "sAjaxSource": '/ipcount/top/1',
     "sAjaxDataProp": "d",
     "sPaginationType": "two_button",
     "aaSorting": [
@@ -27,7 +27,7 @@ $(document).ready(function() {
 
   $('#scores1h').dataTable({
     "bProcessing": true,
-    "sAjaxSource": '/top/2',
+    "sAjaxSource": '/ipcount/top/2',
     "sAjaxDataProp": "d",
     "sPaginationType": "two_button",
     "aaSorting": [
@@ -37,7 +37,7 @@ $(document).ready(function() {
 
   $('#scores12h').dataTable({
     "bProcessing": true,
-    "sAjaxSource": '/top/3',
+    "sAjaxSource": '/ipcount/top/3',
     "sAjaxDataProp": "d",
     "sPaginationType": "two_button",
     "aaSorting": [
@@ -47,14 +47,12 @@ $(document).ready(function() {
 
   $('#scores24h').dataTable({
     "bProcessing": true,
-    "sAjaxSource": '/top/4',
+    "sAjaxSource": '/ipcount/top/4',
     "sAjaxDataProp": "d",
     "sPaginationType": "two_button",
     "aaSorting": [
       [1, "desc"]
     ],
   });
-
-
 
 });
