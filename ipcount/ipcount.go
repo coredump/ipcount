@@ -64,12 +64,17 @@ func main() {
 
 	r := regexp.MustCompile(logRegex)
 	ipRegex := regexp.MustCompile(`\S+\.\S+\.\S+\.\S+`)
+	ignored_ips := map[string]bool{"127.0.0.1": true}
 
 	for line := range t.Lines {
 		if matches := r.FindStringSubmatch(line.Text); matches != nil {
 			if !ipRegex.MatchString(matches[1]) {
 				continue
 			}
+			if ignored_ips[matches[1]] {
+				continue
+			}
+
 			if res := client.Ping(); res.Err() != nil {
 				log.Warning("Redis not connected, %v, reconnecting", res.Val())
 				client = redis.NewTCPClient(redisHost, redisPasswd, redisDB)
