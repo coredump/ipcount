@@ -10,6 +10,7 @@ import (
 	"github.com/vmihailenco/redis"
 	"net/http"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"time"
 )
@@ -87,7 +88,13 @@ func (t *TopController) Read(id string, ctx context.Context) (err error) {
 }
 
 func getWhois(c context.Context) error {
-	ip := c.PathParams().Get("ip").Str()
+	r := regexp.MustCompile(`.+/(\S+\.\S+\.\S+\.\S+)$`)
+	m := r.FindStringSubmatch(c.Path().RawPath)
+	if len(m) != 2 {
+		log.Info("IP not matched on path: %s", c.Path().RawPath)
+		return goweb.API.RespondWithError(c, 500, "This IP didn't match")
+	}
+	ip := m[1]
 	cmd := exec.Command("/usr/bin/whois", ip)
 	log.Debug("%v", cmd)
 	var out bytes.Buffer
