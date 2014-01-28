@@ -20,7 +20,7 @@
     // Mapbox
     $.getJSON("/ipcount/mapdata/1", function(data) {
         console.log(data.d)
-        var map = L.mapbox.map('map', 'coredump.h3ee91bh')
+        var map = L.mapbox.map('map', 'YOUR MAP ID') //
             .setView([37, -98], 4)
             .markerLayer.setGeoJSON(data.d);
     });
