@@ -72,6 +72,8 @@ I also use runit for it.
 
 ## BUGS:
 
+It ignores accesses from 127.0.0.1, but to add other IPs to the ignore list you must change code and recompile the binary. Should probably make this easier.
+
 I failed pretty hard on showing the map on a modal, but code still lying around there. I am also deeply embarassed of my javascript coding and will gladly accept push requests to fix/make it better/prettier. Auto refresh would be nice, for example.
 
 I also realize that there are many ways to do the same thing, including most of the log aggregation/analysis tools. BUT someone must have a use for it, so I made it.
