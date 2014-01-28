@@ -8,7 +8,12 @@
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
     <link href="assets/css/dataTables.bootstrap.css" rel="stylesheet">
-
+    <link href='//api.tiles.mapbox.com/mapbox.js/v1.6.1/mapbox.css' rel='stylesheet' />
+    <style>
+    #map { position:absolute; top:0; bottom:0; width:100%; }
+    #mapModal .modal-body {height:500px; overflow:auto; }
+    #mapModal .modal-dialog {width:800px; }
+    </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -20,7 +25,9 @@
 <body>
     <div class="container">
         <div class="page-header">
-            <h1>Top IP addresses hitting the webheads</h1>
+            <h1>Top IP addresses hitting the webheads
+             <a href="map.html">Map</a>
+                         </h1>
         </div>
         <div class="row">
             <div id="5m" class="col-lg-6">
@@ -30,10 +37,13 @@
                         <tr>
                             <th>Address</th>
                             <th>Hits</th>
+                            <th style="width: 17px">Country</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr id="address">
+                        </tr>
+                        <tr>
                         </tr>
                         <tr>
                         </tr>
@@ -47,13 +57,13 @@
                         <tr>
                             <th>Address</th>
                             <th>Hits</th>
+                            <th style="width: 17px">Country</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                        </tr>
-                        <tr>
-                        </tr>
+                        <tr></tr>
+                        <tr></tr>
+                        <tr></tr>
                     </tbody>
                 </table>
             </div>
@@ -64,9 +74,12 @@
                         <tr>
                             <th>Address</th>
                             <th>Hits</th>
+                            <th style="width: 17px">Country</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                        </tr>
                         <tr>
                         </tr>
                         <tr>
@@ -81,9 +94,12 @@
                         <tr>
                             <th>Address</th>
                             <th>Hits</th>
+                            <th style="width: 17px">Country</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                        </tr>
                         <tr>
                         </tr>
                         <tr>
@@ -94,28 +110,54 @@
         </div>
     </div>
 
-<div class="modal fade" id="whoisModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">WHOIS result</h4>
-      </div>
-      <div class="modal-body">
-        <p id="modal-paragraph"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    <div class="modal fade" id="whoisModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">WHOIS result</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-paragraph"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <!-- map modal -->
+        <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Access Map</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="map"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div id="mapContent" style="{display:hidden}"></div>
 
     <!-- Jquery -->
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
     <script src="assets/js/dataTables.bootstrap.js"></script>
+    <script src='//api.tiles.mapbox.com/mapbox.js/v1.6.1/mapbox.js'></script>
     <script src="assets/app.js"></script>
 </body>
 
